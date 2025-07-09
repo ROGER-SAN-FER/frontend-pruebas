@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import './LoginStyle.css';
 
 function Login({ setAuthenticated, setAuthToken }) {
   const [username, setUsername] = useState('');
@@ -26,7 +27,7 @@ function Login({ setAuthenticated, setAuthToken }) {
       });
 
       if (res.ok) {
-        localStorage.setItem('authToken', token); // Guardar el token para mantener sesión
+        localStorage.setItem('authToken', token);
         setAuthToken(token);
         setAuthenticated(true);
       } else if (res.status === 401 || res.status === 403) {
@@ -43,22 +44,24 @@ function Login({ setAuthenticated, setAuthToken }) {
   };
 
   return (
-    <div style={{ padding: '2rem', fontFamily: 'Arial' }}>
-      <h2>Iniciar Sesión</h2>
-      <input
-        type="text"
-        placeholder="Usuario"
-        value={username}
-        onChange={e => setUsername(e.target.value)}
-      />
-      <input
-        type="password"
-        placeholder="Contraseña"
-        value={password}
-        onChange={e => setPassword(e.target.value)}
-      />
-      <button onClick={handleLogin}>Entrar</button>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
+    <div className="login-container">
+      <div className="login-card">
+        <h2>🍽 Iniciar Sesión</h2>
+        <input
+          type="text"
+          placeholder="Usuario"
+          value={username}
+          onChange={e => setUsername(e.target.value)}
+        />
+        <input
+          type="password"
+          placeholder="Contraseña"
+          value={password}
+          onChange={e => setPassword(e.target.value)}
+        />
+        <button onClick={handleLogin}>Entrar</button>
+        {error && <p className="login-error">{error}</p>}
+      </div>
     </div>
   );
 }
