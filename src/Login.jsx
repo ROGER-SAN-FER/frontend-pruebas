@@ -26,6 +26,7 @@ function Login({ setAuthenticated, setAuthToken }) {
       });
 
       if (res.ok) {
+        localStorage.setItem('authToken', token); // Guardar el token para mantener sesión
         setAuthToken(token);
         setAuthenticated(true);
       } else if (res.status === 401 || res.status === 403) {

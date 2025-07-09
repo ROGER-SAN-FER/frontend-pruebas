@@ -1,4 +1,3 @@
-// src/Dashboard.jsx
 import { useState, useEffect } from 'react';
 
 function Dashboard({ token }) {
@@ -78,9 +77,15 @@ function Dashboard({ token }) {
     }
   };
 
+  const cerrarSesion = () => {
+    localStorage.removeItem('authToken');
+    window.location.href = '/';
+  };
+
   return (
     <div style={{ padding: '2rem', fontFamily: 'Arial' }}>
       <h1>Panel de Pruebas</h1>
+      <button onClick={cerrarSesion} style={{ marginBottom: '1rem' }}>Cerrar sesión</button>
 
       <section style={{ marginBottom: '2rem' }}>
         <h2>Crear Tipo</h2>
