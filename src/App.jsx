@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Login from './Login';
 import Dashboard from './Dashboard';
 
@@ -7,13 +8,22 @@ function App() {
   const [authToken, setAuthToken] = useState('');
 
   return (
-    <div>
-      {authenticated ? (
-        <Dashboard token={authToken} />
-      ) : (
-        <Login setAuthenticated={setAuthenticated} setAuthToken={setAuthToken} />
-      )}
-    </div>
+    <Router>
+      <Routes>
+        <Route
+          path="/"
+          element={
+            authenticated ? <Navigate to="/dashboard" /> : <Login setAuthenticated={setAuthenticated} setAuthToken={setAuthToken} />
+          }
+        />
+        <Route
+          path="/dashboard"
+          element={
+            authenticated ? <Dashboard token={authToken} /> : <Navigate to="/" />
+          }
+        />
+      </Routes>
+    </Router>
   );
 }
 
