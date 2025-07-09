@@ -137,13 +137,14 @@ function Dashboard({ token }) {
     window.location.href = '/';
   };
 
-  // ORDENAMIENTO: tipoId ASC, luego id ASC
+  // ORDENAMIENTO: tipoId ASC, luego id ASC (platillos)
   const platillosOrdenados = [...platillos].sort((a, b) => {
-    if (a.tipoId !== b.tipoId) {
-      return a.tipoId - b.tipoId;
-    }
+    if (a.tipoId !== b.tipoId) return a.tipoId - b.tipoId;
     return a.id - b.id;
   });
+
+  // ORDENAMIENTO: tipos por id ascendente
+  const tiposOrdenados = [...tipos].sort((a, b) => a.id - b.id);
 
   return (
     <div className="dashboard-container">
@@ -231,10 +232,10 @@ function Dashboard({ token }) {
 
         <section>
           <h2>Lista de Tipos</h2>
-          {tipos.length === 0 ? (
+          {tiposOrdenados.length === 0 ? (
             <p>No hay tipos registrados</p>
           ) : (
-            tipos.map(t => (
+            tiposOrdenados.map(t => (
               <div className="tipo-card" key={t.id}>
                 <h3>
                   {t.nombre}{' '}
