@@ -6,7 +6,8 @@ function Login({ setAuthenticated, setAuthToken }) {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
-  const handleLogin = async () => {
+  const handleLogin = async (e) => {
+    if (e) e.preventDefault(); // <--- Previene que el form recargue la página
     setError('');
 
     if (!username || !password) {
@@ -47,20 +48,24 @@ function Login({ setAuthenticated, setAuthToken }) {
     <div className="login-container">
       <div className="login-card">
         <h2>🍽 Iniciar Sesión</h2>
-        <input
-          type="text"
-          placeholder="Usuario"
-          value={username}
-          onChange={e => setUsername(e.target.value)}
-        />
-        <input
-          type="password"
-          placeholder="Contraseña"
-          value={password}
-          onChange={e => setPassword(e.target.value)}
-        />
-        <button onClick={handleLogin}>Entrar</button>
-        {error && <p className="login-error">{error}</p>}
+        <form onSubmit={handleLogin} autoComplete="off">
+          <input
+            type="text"
+            placeholder="Usuario"
+            value={username}
+            onChange={e => setUsername(e.target.value)}
+            autoComplete="username"
+          />
+          <input
+            type="password"
+            placeholder="Contraseña"
+            value={password}
+            onChange={e => setPassword(e.target.value)}
+            autoComplete="current-password"
+          />
+          <button type="submit">Entrar</button>
+          {error && <p className="login-error">{error}</p>}
+        </form>
       </div>
     </div>
   );

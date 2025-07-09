@@ -2,12 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Login from './Login';
 import Dashboard from './Dashboard';
+import ScrollToTop from './ScrollToTop'; // importa el nuevo componente
 
 function App() {
   const [authenticated, setAuthenticated] = useState(false);
   const [authToken, setAuthToken] = useState('');
 
-  // Leer token del localStorage al cargar la app
   useEffect(() => {
     const token = localStorage.getItem('authToken');
     if (token) {
@@ -18,6 +18,7 @@ function App() {
 
   return (
     <Router>
+      <ScrollToTop /> {/* <-- aquí */}
       <Routes>
         <Route
           path="/"

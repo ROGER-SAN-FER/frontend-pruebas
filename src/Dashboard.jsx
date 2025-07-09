@@ -1,4 +1,5 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import './DashboardStyle.css';
 
 function Dashboard({ token }) {
   const [tipoNombre, setTipoNombre] = useState('');
@@ -12,18 +13,29 @@ function Dashboard({ token }) {
   const [platillos, setPlatillos] = useState([]);
   const [tipos, setTipos] = useState([]);
 
+  const tipoInputRef = useRef(null);
+
   const PLATILLOS_API = 'https://backend-restaurant-production-9a85.up.railway.app/api/platillos';
   const TIPOS_API = 'https://backend-restaurant-production-9a85.up.railway.app/api/tipos';
-
-  useEffect(() => {
-    fetchPlatillos();
-    fetchTipos();
-  }, []);
 
   const authHeader = {
     Authorization: `Basic ${token}`,
     'Content-Type': 'application/json'
   };
+
+  useEffect(() => {
+    setTimeout(() => {
+      if (tipoInputRef.current) {
+        tipoInputRef.current.blur();
+      }
+      window.scrollTo(0, 0);
+    }, 150);
+  }, []);
+
+  useEffect(() => {
+    fetchPlatillos();
+    fetchTipos();
+  }, []);
 
   const fetchPlatillos = async () => {
     const res = await fetch(PLATILLOS_API, { headers: authHeader });
@@ -77,89 +89,152 @@ function Dashboard({ token }) {
     }
   };
 
+  // --- ELIMINAR PLATILLO ---
+  const handleEliminarPlatillo = async (id) => {
+    if (!window.confirm('¿Seguro que deseas eliminar este platillo?')) return;
+    const res = await fetch(`${PLATILLOS_API}/${id}`, {
+      method: 'DELETE',
+      headers: authHeader
+    });
+    if (res.ok) {
+      await fetchPlatillos();
+      await fetchTipos();
+      alert('Platillo eliminado');
+    } else {
+      alert('Error al eliminar el platillo');
+    }
+  };
+
+  // --- ELIMINAR TIPO ---
+  const handleEliminarTipo = async (id) => {
+    if (!window.confirm('¿Seguro que deseas eliminar este tipo? (Se eliminarán sus platillos)')) return;
+    const res = await fetch(`${TIPOS_API}/${id}`, {
+      method: 'DELETE',
+      headers: authHeader
+    });
+    if (res.ok) {
+      await fetchTipos();
+      await fetchPlatillos();
+      alert('Tipo eliminado');
+    } else {
+      alert('Error al eliminar el tipo');
+    }
+  };
+
   const cerrarSesion = () => {
     localStorage.removeItem('authToken');
     window.location.href = '/';
   };
 
   return (
-    <div style={{ padding: '2rem', fontFamily: 'Arial' }}>
-      <h1>Panel de Pruebas</h1>
-      <button onClick={cerrarSesion} style={{ marginBottom: '1rem' }}>Cerrar sesión</button>
+    <div className="dashboard-container">
+      <div className="dashboard-card">
+        <div className="header">
+          <h1>Panel de Administración</h1>
+          <button onClick={cerrarSesion} className="logout-btn">Cerrar sesión</button>
+        </div>
 
-      <section style={{ marginBottom: '2rem' }}>
-        <h2>Crear Tipo</h2>
-        <input
-          type="text"
-          value={tipoNombre}
-          onChange={e => setTipoNombre(e.target.value)}
-          placeholder="Nombre del tipo"
-        />
-        <button onClick={handleCrearTipo}>Guardar Tipo</button>
-      </section>
+        <section>
+          <h2>Crear Tipo</h2>
+          <input
+            type="text"
+            ref={tipoInputRef}
+            autoComplete="off"
+            value={tipoNombre}
+            onChange={e => setTipoNombre(e.target.value)}
+            placeholder="Nombre del tipo"
+          />
+          <button className="green-btn" onClick={handleCrearTipo}>Guardar Tipo</button>
+        </section>
 
-      <section style={{ marginBottom: '2rem' }}>
-        <h2>Crear Platillo</h2>
-        <input
-          type="text"
-          value={platillo.nombre}
-          onChange={e => setPlatillo({ ...platillo, nombre: e.target.value })}
-          placeholder="Nombre del platillo"
-        />
-        <input
-          type="number"
-          value={platillo.precio}
-          onChange={e => setPlatillo({ ...platillo, precio: e.target.value })}
-          placeholder="Precio"
-        />
-        <input
-          type="number"
-          value={platillo.tipoId}
-          onChange={e => setPlatillo({ ...platillo, tipoId: e.target.value })}
-          placeholder="ID del tipo"
-        />
-        <input
-          type="text"
-          value={platillo.insumos}
-          onChange={e => setPlatillo({ ...platillo, insumos: e.target.value })}
-          placeholder="Insumos separados por coma"
-        />
-        <button onClick={handleCrearPlatillo}>Guardar Platillo</button>
-      </section>
+        <section>
+          <h2>Crear Platillo</h2>
+          <input
+            type="text"
+            autoComplete="off"
+            value={platillo.nombre}
+            onChange={e => setPlatillo({ ...platillo, nombre: e.target.value })}
+            placeholder="Nombre del platillo"
+          />
+          <input
+            type="number"
+            autoComplete="off"
+            value={platillo.precio}
+            onChange={e => setPlatillo({ ...platillo, precio: e.target.value })}
+            placeholder="Precio"
+          />
+          <input
+            type="number"
+            autoComplete="off"
+            value={platillo.tipoId}
+            onChange={e => setPlatillo({ ...platillo, tipoId: e.target.value })}
+            placeholder="ID del tipo"
+          />
+          <input
+            type="text"
+            autoComplete="off"
+            value={platillo.insumos}
+            onChange={e => setPlatillo({ ...platillo, insumos: e.target.value })}
+            placeholder="Insumos separados por coma"
+          />
+          <button className="green-btn" onClick={handleCrearPlatillo}>Guardar Platillo</button>
+        </section>
 
-      <section>
-        <h2>Lista de Platillos</h2>
-        {platillos.length === 0 ? (
-          <p>No hay platillos registrados</p>
-        ) : (
-          <ul>
-            {platillos.map(p => (
-              <li key={p.id}>
-                <strong>{p.nombre}</strong> – €{p.precio} – Tipo: {p.tipoNombre}<br />
-                Insumos: {p.insumos.join(', ')}
-              </li>
-            ))}
-          </ul>
-        )}
-      </section>
+        <section>
+          <h2>Lista de Platillos</h2>
+          {platillos.length === 0 ? (
+            <p>No hay platillos registrados</p>
+          ) : (
+            <ul className="platillo-list">
+              {platillos.map(p => (
+                <li key={p.id}>
+                  <strong>{p.nombre}</strong> – €{p.precio} – Tipo: {p.tipoNombre}<br />
+                  Insumos: {p.insumos.join(', ')}
+                  {' '}
+                  <button
+                    className="delete-btn"
+                    title="Eliminar platillo"
+                    onClick={() => handleEliminarPlatillo(p.id)}
+                  >
+                    🗑️
+                  </button>
+                </li>
+              ))}
+            </ul>
+          )}
+        </section>
 
-      <section style={{ marginTop: '2rem' }}>
-        <h2>Lista de Tipos</h2>
-        {tipos.length === 0 ? (
-          <p>No hay tipos registrados</p>
-        ) : (
-          tipos.map(t => (
-            <div key={t.id}>
-              <h4>{t.nombre}</h4>
-              <ul>
-                {t.platillos.map(p => (
-                  <li key={p.id}>{p.nombre} – €{p.precio}</li>
-                ))}
-              </ul>
-            </div>
-          ))
-        )}
-      </section>
+        <section>
+          <h2>Lista de Tipos</h2>
+          {tipos.length === 0 ? (
+            <p>No hay tipos registrados</p>
+          ) : (
+            tipos.map(t => (
+              <div className="tipo-card" key={t.id}>
+                <h3>
+                  {t.nombre}{' '}
+                  <span style={{ color: "#888", fontWeight: "normal", fontSize: "1rem" }}>
+                    ID: {t.id}
+                  </span>
+                  {' '}
+                  <button
+                    className="delete-btn"
+                    title="Eliminar tipo"
+                    onClick={() => handleEliminarTipo(t.id)}
+                  >
+                    🗑️
+                  </button>
+                </h3>
+                <ul>
+                  {t.platillos.map(p => (
+                    <li key={p.id}>{p.nombre} – €{p.precio}</li>
+                  ))}
+                </ul>
+              </div>
+            ))
+          )}
+        </section>
+      </div>
     </div>
   );
 }
