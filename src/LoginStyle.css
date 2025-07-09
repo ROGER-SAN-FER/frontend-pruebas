@@ -1,56 +1,59 @@
-/* LoginStyle.css */
-
-.login-container {
-  min-height: 100vh;
-  background-image: url('https://images.unsplash.com/photo-1555992336-03a23c5a35f6');
+body {
+  margin: 0;
+  padding: 0;
+  background-image: url('https://images.unsplash.com/photo-1600891965050-4d52f82fd9dd?auto=format&fit=crop&w=1470&q=80');
   background-size: cover;
   background-position: center;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 1rem;
 }
 
-.login-card {
-  background-color: rgba(255, 255, 255, 0.95);
-  padding: 2rem;
-  border-radius: 10px;
+.login-container {
+  background-color: rgba(255, 255, 255, 0.9);
+  padding: 2rem 3rem;
+  border-radius: 15px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
   max-width: 400px;
-  width: 100%;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-  font-family: Arial, sans-serif;
+  width: 90%;
   text-align: center;
 }
 
-.login-card h2 {
+.login-container h2 {
   margin-bottom: 1.5rem;
+  color: #333;
 }
 
-.login-card input {
+.login-container input {
   width: 100%;
-  padding: 0.75rem;
-  margin-bottom: 1rem;
-  border-radius: 5px;
+  padding: 0.8rem;
+  margin: 0.5rem 0;
   border: 1px solid #ccc;
+  border-radius: 8px;
   font-size: 1rem;
+  background-color: #f9f9f9;
 }
 
-.login-card button {
+.login-container button {
   width: 100%;
-  padding: 0.75rem;
-  background-color: #dc3545;
-  color: #fff;
+  padding: 0.8rem;
+  margin-top: 1rem;
+  background-color: #e63946;
+  color: white;
   border: none;
-  border-radius: 5px;
+  border-radius: 8px;
   font-size: 1rem;
   cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
-.login-card button:hover {
-  background-color: #c82333;
+.login-container button:hover {
+  background-color: #d62828;
 }
 
-.login-error {
-  color: red;
+.login-container p {
   margin-top: 1rem;
+  color: red;
 }
