@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './DashboardStyle.css';
 
 function Dashboard({ token }) {
@@ -14,6 +15,7 @@ function Dashboard({ token }) {
   const [tipos, setTipos] = useState([]);
 
   const tipoInputRef = useRef(null);
+  const navigate = useNavigate();
 
   const PLATILLOS_API = 'https://backend-restaurant-production-9a85.up.railway.app/api/platillos';
   const TIPOS_API = 'https://backend-restaurant-production-9a85.up.railway.app/api/tipos';
@@ -67,7 +69,6 @@ function Dashboard({ token }) {
 
   const handleCrearPlatillo = async () => {
     const insumosArray = platillo.insumos.split(',').map(i => i.trim());
-
     const res = await fetch(PLATILLOS_API, {
       method: 'POST',
       headers: authHeader,
@@ -121,10 +122,28 @@ function Dashboard({ token }) {
     }
   };
 
+  // --- EDITAR PLATILLO ---
+  const handleEditarPlatillo = (id) => {
+    navigate(`/platillos/${id}/edit`);
+  };
+
+  // --- EDITAR TIPO ---
+  const handleEditarTipo = (id) => {
+    navigate(`/tipos/${id}/edit`);
+  };
+
   const cerrarSesion = () => {
     localStorage.removeItem('authToken');
     window.location.href = '/';
   };
+
+  // ORDENAMIENTO: tipoId ASC, luego id ASC
+  const platillosOrdenados = [...platillos].sort((a, b) => {
+    if (a.tipoId !== b.tipoId) {
+      return a.tipoId - b.tipoId;
+    }
+    return a.id - b.id;
+  });
 
   return (
     <div className="dashboard-container">
@@ -182,22 +201,28 @@ function Dashboard({ token }) {
 
         <section>
           <h2>Lista de Platillos</h2>
-          {platillos.length === 0 ? (
+          {platillosOrdenados.length === 0 ? (
             <p>No hay platillos registrados</p>
           ) : (
             <ul className="platillo-list">
-              {platillos.map(p => (
+              {platillosOrdenados.map(p => (
                 <li key={p.id}>
-                  <strong>{p.nombre}</strong> – €{p.precio} – Tipo: {p.tipoNombre}<br />
-                  Insumos: {p.insumos.join(', ')}
-                  {' '}
-                  <button
-                    className="delete-btn"
-                    title="Eliminar platillo"
-                    onClick={() => handleEliminarPlatillo(p.id)}
-                  >
-                    🗑️
-                  </button>
+                  <span>
+                    <strong>{p.nombre}</strong> – €{p.precio} – Tipo: {p.tipoNombre}<br />
+                    Insumos: {p.insumos.join(', ')}
+                  </span>
+                  <span>
+                    <button
+                      className="delete-btn"
+                      title="Eliminar platillo"
+                      onClick={() => handleEliminarPlatillo(p.id)}
+                    >🗑️</button>
+                    <button
+                      className="update-btn"
+                      title="Actualizar platillo"
+                      onClick={() => handleEditarPlatillo(p.id)}
+                    >✏️</button>
+                  </span>
                 </li>
               ))}
             </ul>
@@ -216,14 +241,16 @@ function Dashboard({ token }) {
                   <span style={{ color: "#888", fontWeight: "normal", fontSize: "1rem" }}>
                     ID: {t.id}
                   </span>
-                  {' '}
                   <button
                     className="delete-btn"
                     title="Eliminar tipo"
                     onClick={() => handleEliminarTipo(t.id)}
-                  >
-                    🗑️
-                  </button>
+                  >🗑️</button>
+                  <button
+                    className="update-btn"
+                    title="Actualizar tipo"
+                    onClick={() => handleEditarTipo(t.id)}
+                  >✏️</button>
                 </h3>
                 <ul>
                   {t.platillos.map(p => (

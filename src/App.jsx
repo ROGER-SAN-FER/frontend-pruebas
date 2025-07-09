@@ -2,7 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Login from './Login';
 import Dashboard from './Dashboard';
-import ScrollToTop from './ScrollToTop'; // importa el nuevo componente
+import PlatilloEdit from './PlatilloEdit';  // nuevo
+import TipoEdit from './TipoEdit';          // nuevo
+import ScrollToTop from './ScrollToTop';
 
 function App() {
   const [authenticated, setAuthenticated] = useState(false);
@@ -18,7 +20,7 @@ function App() {
 
   return (
     <Router>
-      <ScrollToTop /> {/* <-- aquí */}
+      <ScrollToTop />
       <Routes>
         <Route
           path="/"
@@ -33,6 +35,22 @@ function App() {
           element={
             authenticated
               ? <Dashboard token={authToken} />
+              : <Navigate to="/" />
+          }
+        />
+        <Route
+          path="/platillos/:id/edit"
+          element={
+            authenticated
+              ? <PlatilloEdit token={authToken} />
+              : <Navigate to="/" />
+          }
+        />
+        <Route
+          path="/tipos/:id/edit"
+          element={
+            authenticated
+              ? <TipoEdit token={authToken} />
               : <Navigate to="/" />
           }
         />
