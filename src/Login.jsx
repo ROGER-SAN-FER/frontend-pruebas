@@ -6,20 +6,38 @@ function Login({ setAuthenticated, setAuthToken }) {
   const [error, setError] = useState('');
 
   const handleLogin = async () => {
-    const token = btoa(`${username}:${password}`);
-    const res = await fetch('https://backend-restaurant-production-9a85.up.railway.app/api/platillos', {
-      headers: {
-        'Authorization': `Basic ${token}`
-      }
-    });
+    setError('');
 
-    if (res.ok) {
-      setAuthToken(token);
-      setAuthenticated(true);
-    } else {
-      setError('Credenciales incorrectas');
-      setUsername('');
-      setPassword('');
+    if (!username || !password) {
+      setError('Debes ingresar usuario y contraseña');
+      return;
+    }
+
+    const token = btoa(`${username}:${password}`);
+
+    try {
+      const res = await fetch('https://backend-restaurant-production-9a85.up.railway.app/api/platillos', {
+        method: 'GET',
+        headers: {
+          'Authorization': `Basic ${token}`,
+          'Content-Type': 'application/json'
+        },
+        mode: 'cors'
+      });
+
+      if (res.ok) {
+        setAuthToken(token);
+        setAuthenticated(true);
+      } else if (res.status === 401 || res.status === 403) {
+        setError('Credenciales incorrectas');
+        setUsername('');
+        setPassword('');
+      } else {
+        setError('Error desconocido al autenticar');
+      }
+    } catch (err) {
+      console.error('Error en login:', err);
+      setError('Error de red al intentar conectar con el servidor');
     }
   };
 
