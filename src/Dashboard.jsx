@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './DashboardStyle.css';
-import { API_BASE_URL } from './apiConfig';
+import { API_BASE_URL } from "./apiConfig";
 
 function Dashboard({ token }) {
   const [tipoNombre, setTipoNombre] = useState('');

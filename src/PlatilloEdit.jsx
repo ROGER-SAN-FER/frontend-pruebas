@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import './DashboardStyle.css';
-import { API_BASE_URL } from './apiConfig';
+import { API_BASE_URL } from "./apiConfig";
 
 function EditPlatillo({ token }) {
   const { id } = useParams();
