@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './DashboardStyle.css';
+import { API_BASE_URL } from './apiConfig';
 
 function Dashboard({ token }) {
   const [tipoNombre, setTipoNombre] = useState('');
@@ -17,8 +18,8 @@ function Dashboard({ token }) {
   const tipoInputRef = useRef(null);
   const navigate = useNavigate();
 
-  const PLATILLOS_API = 'https://backend-restaurant-production-9a85.up.railway.app/api/platillos';
-  const TIPOS_API = 'https://backend-restaurant-production-9a85.up.railway.app/api/tipos';
+  const PLATILLOS_API = `${API_BASE_URL}/platillos`;
+  const TIPOS_API = `${API_BASE_URL}/tipos`;
 
   const authHeader = {
     Authorization: `Basic ${token}`,

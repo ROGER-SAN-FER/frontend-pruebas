@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import './LoginStyle.css';
+import { API_BASE_URL } from './apiConfig';
 
 function Login({ setAuthenticated, setAuthToken }) {
   const [username, setUsername] = useState('');
@@ -18,7 +19,7 @@ function Login({ setAuthenticated, setAuthToken }) {
     const token = btoa(`${username}:${password}`);
 
     try {
-      const res = await fetch('https://backend-restaurant-production-9a85.up.railway.app/api/platillos', {
+      const res = await fetch(`${API_BASE_URL}/platillos`, {
         method: 'GET',
         headers: {
           'Authorization': `Basic ${token}`,

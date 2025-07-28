@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import './DashboardStyle.css';
+import { API_BASE_URL } from './apiConfig';
 
 function EditPlatillo({ token }) {
   const { id } = useParams();
@@ -13,8 +14,8 @@ function EditPlatillo({ token }) {
   const [tipos, setTipos] = useState([]);
   const navigate = useNavigate();
 
-  const PLATILLOS_API = 'https://backend-restaurant-production-9a85.up.railway.app/api/platillos';
-  const TIPOS_API = 'https://backend-restaurant-production-9a85.up.railway.app/api/tipos';
+  const PLATILLOS_API = `${API_BASE_URL}/platillos`;
+  const TIPOS_API = `${API_BASE_URL}/tipos`;
 
   const authHeader = {
     Authorization: `Basic ${token}`,

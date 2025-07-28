@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import './DashboardStyle.css';
+import { API_BASE_URL } from './apiConfig';
 
 function TipoEdit({ token }) {
   const { id } = useParams();
@@ -8,7 +9,7 @@ function TipoEdit({ token }) {
   const [tipo, setTipo] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  const API = `https://backend-restaurant-production-9a85.up.railway.app/api/tipos/${id}`;
+  const API = `${API_BASE_URL}/tipos/${id}`;
   const authHeader = {
     Authorization: `Basic ${token}`,
     'Content-Type': 'application/json'
