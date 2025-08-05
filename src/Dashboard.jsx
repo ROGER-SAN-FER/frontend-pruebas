@@ -91,7 +91,6 @@ function Dashboard({ token }) {
     }
   };
 
-  // --- ELIMINAR PLATILLO ---
   const handleEliminarPlatillo = async (id) => {
     if (!window.confirm('¿Seguro que deseas eliminar este platillo?')) return;
     const res = await fetch(`${PLATILLOS_API}/${id}`, {
@@ -107,7 +106,6 @@ function Dashboard({ token }) {
     }
   };
 
-  // --- ELIMINAR TIPO ---
   const handleEliminarTipo = async (id) => {
     if (!window.confirm('¿Seguro que deseas eliminar este tipo? (Se eliminarán sus platillos)')) return;
     const res = await fetch(`${TIPOS_API}/${id}`, {
@@ -123,12 +121,10 @@ function Dashboard({ token }) {
     }
   };
 
-  // --- EDITAR PLATILLO ---
   const handleEditarPlatillo = (id) => {
     navigate(`/platillos/${id}/edit`);
   };
 
-  // --- EDITAR TIPO ---
   const handleEditarTipo = (id) => {
     navigate(`/tipos/${id}/edit`);
   };
@@ -138,14 +134,18 @@ function Dashboard({ token }) {
     window.location.href = '/';
   };
 
-  // ORDENAMIENTO: tipoId ASC, luego id ASC (platillos)
   const platillosOrdenados = [...platillos].sort((a, b) => {
     if (a.tipoId !== b.tipoId) return a.tipoId - b.tipoId;
     return a.id - b.id;
   });
 
-  // ORDENAMIENTO: tipos por id ascendente
   const tiposOrdenados = [...tipos].sort((a, b) => a.id - b.id);
+
+  // ✅ Agrupar platillos por tipoId
+  const platillosPorTipo = tiposOrdenados.reduce((acc, tipo) => {
+    acc[tipo.id] = platillos.filter(p => p.tipoId === tipo.id);
+    return acc;
+  }, {});
 
   return (
     <div className="dashboard-container">
@@ -255,7 +255,7 @@ function Dashboard({ token }) {
                   >✏️</button>
                 </h3>
                 <ul>
-                  {t.platillos.map(p => (
+                  {(platillosPorTipo[t.id] || []).map(p => (
                     <li key={p.id}>{p.nombre} – €{p.precio}</li>
                   ))}
                 </ul>
